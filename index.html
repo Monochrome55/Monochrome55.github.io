@@ -1,209 +1,340 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>QRコード生成サイト</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <style>
-    h1 {
-			margin-top: 0px;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 30px;
-    }
-    input, button {
-      font-size: 16px;
-      margin: 10px;
-      padding: 5px;
-    }
-    .q_c_b {
-			display: flex;
-			justify-content: space-between;
-			margin: auto;
-			width: 810px;
-			height: 400px;
-      margin-top: 20px;
-			margin-bottom: 20px;
-    }
-		#qrcode {
-			width: 256;
-			height: 256;
+    <meta charset="UTF-8">
+    <title>QRコード生成サイト</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        h1 {
+            margin-top: 0px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        input, button {
+            font-size: 16px;
+            margin: 10px;
+            padding: 5px;
+        }
+        .q_c_b {
+            display: flex;
+            justify-content: space-between;
+            margin: auto;
+            width: 810px;
+            height: 400px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+		#bigqrframe {
+			width: 256px;
 		}
-		#cameraframe {
-			width: 280;
-			height: 400;
-			background-color: yellow;
+        #qrcode {
+            width: 256px;
+            height: 256px;
+        }
+        #cameraframe {
+            width: 280;
+            height: 400;
+            margin-left: 20px;
+            padding-right: 20px;
+            overflow: hidden;
+        }
+        #button {
+            width: auto;
+            height: auto;
+            margin: auto;
+        }
+        #qrframe {
+            margin-left: auto;
+            width: 180px;
+            height: 180px;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid black;
+            clear: both;
+        }
+        #qrcodeSmall {
+            width: 180px;
+            height: 180px;
+        }
+        #canvasframe {
+            width: 280px;
+            height: 400px;
+            margin-right: auto;
+            margin-top: 60px;
+            position: absolute;
+        }
+        #randomString {
+            margin: auto;
+            width: 810px;
+            height: 24px;
+            margin-top: 10px;
+            word-break: break-word;
+        }
+        .IDcard {
+            display: flex;
+            margin: auto;
+            padding: 20px;
+            width: 770px;
+            height: 460px;
+            background-color: #FFCADE;
+			font-size: x-large;
+        }
+        #buttons {
+            width: 280px;
+            height: 340px;
+			padding-top: 30px;
+            display: flex;
+			flex-wrap: wrap-reverse;
+        }
+		#buttons_r1 {
+			width: 100%;
 		}
-		#button {
-			width: auto;
-			height: auto;
+		#buttons_r2 {
+			width: 100%;
 		}
-		#qrframe {
-			margin-left: auto;
-			width: 180px;
-			height: 180px;
-			padding: 10px;
-			background-color: white;
-			border: 2px solid black;
-			clear: both;
+		#buttons_r3 {
+			width: 100%;
 		}
-		#qrcodeSmall {
-			width: 180px;
-			height: 180px;
-			clear: both;
+		#buttons_r3 input {
+			width: 60%;
+			height: 60%;
 		}
-		#canvasframe {
+		#buttons_r4 {
+			width: 100%;
+		}
 
+        #DNPcanvas {
+            margin-bottom: 20px;
+			border: 2px dashed #e46b99;
+			height: 100%;
 			width: 280px;
-			height: 400px;
-			margin-right: auto;
-			margin-top: 60px;
+        }
+        #DNPname {
+            margin: 0;
+            height: 25px;
+            margin-right: 10px;
+			font-size: x-large;
+			width: 200px;
+        }
+        #DNPante {
+            margin: 0;
+            height: 25px;
+			font-size: x-large;
+			width: 270px;
+        }
+        #camera {
+            width: 280px;
+            height: 400px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        #zoomCheckbox {
+            flex-grow: 0;
+        }
+		select {
+			height: 30px;
+			font-size: 20px;
+			text-align: center;
+		}
+		.select_box {
 			position: absolute;
-		}
-    #randomString {
-			margin: auto;
-			width: 810px;
-			height: 24px;
-      margin-top: 10px;
-      word-break: break-word;
-    }
-		.IDcard {
+			width: 200px;
+			margin-left: 290px;
+			padding: 30px;
+			padding-top: 0px;
+			padding-bottom :25px;
+			margin-top:55px;
 			display: flex;
-			margin: auto;
-			padding: 20px;
-			width: 770px;
-			height: 460px;
-			background-color: #FFCADE;
+			flex-direction: column;
+			gap: 10px;
 		}
-		#buttons {
-			clear: both;
+		#evasion ,#size {
+			width: 70%;
 		}
-		#DNPcanvas {
-			margin-bottom: 20px;
+
+		#box_evasion {
+			margin-bottom: 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
-		#DNPname {
-			margin: 0;
-			height: 25px;
-			margin-right: 10px;
+		#box_size {
+			height: 60px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
-		#DNPante {
-			margin: 0;
-			height: 25px;
+		#memo {
+			position: absolute;
+			margin-left: 300px;
+			margin-top: 220px;
 		}
-  </style>
+
+    </style>
 </head>
 <body>
-  <h1>ランダム文字列QRコード生成</h1>
+    <h1>ランダム文字列QRコード生成</h1>
 
-  <label for="lengthInput">文字列の長さ:</label>
-  <input type="number" id="lengthInput" value="64" min="1" />
+    <label for="lengthInput">文字列の長さ:</label>
+    <input type="number" id="lengthInput" value="64" min="1" />
+    <button onclick="generate()">生成</button>
 
-  <button onclick="generate()">生成</button>
-
-  <div id="randomString"></div>
-  <div class="q_c_b">
-		<div id="qrcode"></div>
-		<div id="cameraframe">
-			<video id="camera" autoplay muted playsinline></video>
+    <div id="randomString"></div>
+    <div class="q_c_b">
+		<div id="bigqrframe">
+			<div id="qrcode"></div>
 		</div>
-		<div id="buttons">
-			<input type="button" value="カメラ起動" onclick="cameraInitSmartphoneSupport()">
-			<input type="button" value="撮影" onclick="shoot()">
-		</div>
-	</div>
+        <div id="cameraframe">
+            <video id="camera" autoplay muted playsinline></video>
+        </div>
+        <div id="buttons">
+			<div id="buttons_r1">
+				<input type="button" value="IDカードを保存" onclick="downloadIDCardImage()">
+			</div>
+            <div id="buttons_r2">
+                <label>
+                    <input type="checkbox" id="zoomCheckbox" />
+                    ２倍ズーム
+                </label>
+            </div>
+			<div id="buttons_r3">
+                <input type="button" value="撮影" onclick="shoot()">
+			</div>
+			<div id="buttons_r4">
+				<input type="button" value="カメラ起動" onclick="cameraInitSmartphoneSupport()">
+			</div>
+        </div>
+    </div>
 
-  <div class="IDcard">
-		<div id="canvasframe">
-			<canvas id="DNPcanvas" wcrossorigin="anonymous"></canvas>
+    <div class="IDcard">
+        <div id="canvasframe">
+            <canvas id="DNPcanvas" wcrossorigin="anonymous"></canvas>
+        </div>
+        <input type="text" id="DNPname" placeholder="ここに名前を入力">
+        <input type="text" id="DNPante" placeholder="ここにアンテナ名を入力">
+		<div class="select_box">
+			<div id="box_evasion">
+				<label for="evasion">回避率</label>
+				<select id="evasion">
+					<option value="1">未選択</option>
+					<option value="2">0</option>
+					<option value="3">3+</option>
+					<option value="4">3-</option>
+					<option value="5">3?</option>
+					<option value="6">6+</option>
+					<option value="7">6-</option>
+					<option value="8">6?</option>
+					<option value="9">10</option>
+					<option value="10">15</option>
+				</select>
+			</div>
+			<div id="box_size">
+				<label for="size">体格</label>
+				<select id="size">
+					<option value="1">未選択</option>
+					<option value="2">最大</option>
+					<option value="3">準大</option>
+					<option value="4">中間</option>
+					<option value="5">準速</option>
+					<option value="6">最速</option>
+					<option value="7">不明</option>
+				</select>
+			</div>
 		</div>
-		<input type="text" id="DNPname" size="20" placeholder="ここに名前を入力">
-		<input type="text" id="DNPante" size="30" placeholder="ここにアンテナ名を入力">
+		<div id="memo">
+			<label>メモ</label>
+		</div>
+        <div id="qrframe">
+            <div id="qrcodeSmall"></div>
+        </div>
+
+
 		
-		<div id="qrframe">
-			<div id="qrcodeSmall"></div>
-		</div>
-  </div>
+    </div>
 
-  <script>
-    function generateRandomString(length) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return result;
-    }
+    <script>
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
 
-    function generate() {
-      const length = parseInt(document.getElementById('lengthInput').value) || 64;
-      const randomString = generateRandomString(length);
-      document.getElementById('randomString').textContent = "生成された文字列: " + randomString;
+        function generate() {
+            const length = parseInt(document.getElementById('lengthInput').value) || 64;
+            const randomString = generateRandomString(length);
+            document.getElementById('randomString').textContent = "生成された文字列: " + randomString;
 
-      const qrCodeContainer = document.getElementById('qrcode');
-      qrCodeContainer.innerHTML = '';
-      new QRCode(qrCodeContainer, {
-        text: randomString,
-        width: 256,
-        height: 256
-      });
-			const qrCodeSmallContainer = document.getElementById('qrcodeSmall');
-      qrCodeSmallContainer.innerHTML = '';
-      new QRCode(qrCodeSmallContainer, {
-        text: randomString,
-        width: 180,
-        height: 180
-      });
-    }
+            const qrCodeContainer = document.getElementById('qrcode');
+            qrCodeContainer.innerHTML = '';
+            new QRCode(qrCodeContainer, {
+                text: randomString,
+                width: 256,
+                height: 256
+            });
 
-		const cameraWidth = 280;
-		const cameraHeight = 400;
-		const cameraInitSmartphoneSupport = () => {
-			const video = document.getElementById("camera");
+            const qrCodeSmallContainer = document.getElementById('qrcodeSmall');
+            qrCodeSmallContainer.innerHTML = '';
+            new QRCode(qrCodeSmallContainer, {
+                text: randomString,
+                width: 180,
+                height: 180
+            });
+        }
 
-			//スマホからの閲覧か
-			const isMobile = navigator.userAgent.match(/iPhone|Android/);
+        const cameraWidth = 280;
+        const cameraHeight = 400;
 
-			const cameraSetting = {
-				audio: false,
-				video: {
-					//スマホの場合は縦横を逆に設定する
-					width: isMobile ? cameraHeight : cameraWidth,
-					height: isMobile ? cameraWidth : cameraHeight,
-					facingMode: "environment",
-				}
-			}
+        const cameraInitSmartphoneSupport = () => {
+            const video = document.getElementById("camera");
+            const isMobile = navigator.userAgent.match(/iPhone|Android/);
+            const cameraSetting = {
+                audio: false,
+                video: {
+                    width: isMobile ? cameraHeight : cameraWidth,
+                    height: isMobile ? cameraWidth : cameraHeight,
+                    facingMode: "environment",
+                }
+            };
 
-			navigator.mediaDevices.getUserMedia(cameraSetting)
-				.then((mediaStream) => {
-					video.srcObject = mediaStream;
-				})
-				.catch((err) => {
-					console.log(err.toString());
-				});
+            navigator.mediaDevices.getUserMedia(cameraSetting)
+                .then((mediaStream) => {
+                    video.srcObject = mediaStream;
+                })
+                .catch((err) => {
+                    console.log(err.toString());
+                });
+        };
+
+        const shoot = () => {
+            const video = document.getElementById("camera");
+            const canvas = document.getElementById("DNPcanvas");
+            canvas.width = cameraWidth;
+            canvas.height = cameraHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, cameraWidth, cameraHeight);
+        };
+
+		function downloadIDCardImage() {
+			const card = document.querySelector('.IDcard');
+			const scale = 2; //高解像度用
+
+			html2canvas(card, {
+				scale: scale,
+				useCORS: true
+			}).then(canvas => {
+				const link = document.createElement('a');
+				link.download = 'QRDenpamenIDcard.png';
+				link.href = canvas.toDataURL();
+				link.click();
+			});
 		}
-
-		const shoot = () => {
-			//video要素
-			const video = document.getElementById("camera");
-			//canvas要素
-			const canvas = document.getElementById("DNPcanvas");
-			//canvas要素の大きさを変更
-			canvas.width = cameraWidth;
-			canvas.height = cameraHeight;
-			//描画用オブジェクトを取得
-			const ctx = canvas.getContext("2d");
-
-			//描画する
-			ctx.drawImage(
-				video,
-				0,
-				0,
-				cameraWidth,
-				cameraHeight
-			);
-		}
-  </script>
+    </script>
 </body>
 </html>
