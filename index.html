@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>QRコード生成サイト</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    h1 {
+			margin-top: 0px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    input, button {
+      font-size: 16px;
+      margin: 10px;
+      padding: 5px;
+    }
+    .q_c_b {
+			display: flex;
+			justify-content: space-between;
+			margin: auto;
+			width: 810px;
+			height: 400px;
+      margin-top: 20px;
+			margin-bottom: 20px;
+    }
+		#qrcode {
+			width: 256;
+			height: 256;
+		}
+		#cameraframe {
+			width: 280;
+			height: 400;
+			background-color: yellow;
+		}
+		#button {
+			width: auto;
+			height: auto;
+		}
+		#qrframe {
+			margin-left: auto;
+			width: 180px;
+			height: 180px;
+			padding: 10px;
+			background-color: white;
+			border: 2px solid black;
+			clear: both;
+		}
+		#qrcodeSmall {
+			width: 180px;
+			height: 180px;
+			clear: both;
+		}
+		#canvasframe {
+
+			width: 280px;
+			height: 400px;
+			margin-right: auto;
+			margin-top: 60px;
+			position: absolute;
+		}
+    #randomString {
+			margin: auto;
+			width: 810px;
+			height: 24px;
+      margin-top: 10px;
+      word-break: break-word;
+    }
+		.IDcard {
+			display: flex;
+			margin: auto;
+			padding: 20px;
+			width: 770px;
+			height: 460px;
+			background-color: #FFCADE;
+		}
+		#buttons {
+			clear: both;
+		}
+		#DNPcanvas {
+			margin-bottom: 20px;
+		}
+		#DNPname {
+			margin: 0;
+			height: 25px;
+			margin-right: 10px;
+		}
+		#DNPante {
+			margin: 0;
+			height: 25px;
+		}
+  </style>
+</head>
+<body>
+  <h1>ランダム文字列QRコード生成</h1>
+
+  <label for="lengthInput">文字列の長さ:</label>
+  <input type="number" id="lengthInput" value="64" min="1" />
+
+  <button onclick="generate()">生成</button>
+
+  <div id="randomString"></div>
+  <div class="q_c_b">
+		<div id="qrcode"></div>
+		<div id="cameraframe">
+			<video id="camera" autoplay muted playsinline></video>
+		</div>
+		<div id="buttons">
+			<input type="button" value="カメラ起動" onclick="cameraInitSmartphoneSupport()">
+			<input type="button" value="撮影" onclick="shoot()">
+		</div>
+	</div>
+
+  <div class="IDcard">
+		<div id="canvasframe">
+			<canvas id="DNPcanvas" wcrossorigin="anonymous"></canvas>
+		</div>
+		<input type="text" id="DNPname" size="20" placeholder="ここに名前を入力">
+		<input type="text" id="DNPante" size="30" placeholder="ここにアンテナ名を入力">
+		
+		<div id="qrframe">
+			<div id="qrcodeSmall"></div>
+		</div>
+  </div>
+
+  <script>
+    function generateRandomString(length) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    function generate() {
+      const length = parseInt(document.getElementById('lengthInput').value) || 64;
+      const randomString = generateRandomString(length);
+      document.getElementById('randomString').textContent = "生成された文字列: " + randomString;
+
+      const qrCodeContainer = document.getElementById('qrcode');
+      qrCodeContainer.innerHTML = '';
+      new QRCode(qrCodeContainer, {
+        text: randomString,
+        width: 256,
+        height: 256
+      });
+			const qrCodeSmallContainer = document.getElementById('qrcodeSmall');
+      qrCodeSmallContainer.innerHTML = '';
+      new QRCode(qrCodeSmallContainer, {
+        text: randomString,
+        width: 180,
+        height: 180
+      });
+    }
+
+		const cameraWidth = 280;
+		const cameraHeight = 400;
+		const cameraInitSmartphoneSupport = () => {
+			const video = document.getElementById("camera");
+
+			//スマホからの閲覧か
+			const isMobile = navigator.userAgent.match(/iPhone|Android/);
+
+			const cameraSetting = {
+				audio: false,
+				video: {
+					//スマホの場合は縦横を逆に設定する
+					width: isMobile ? cameraHeight : cameraWidth,
+					height: isMobile ? cameraWidth : cameraHeight,
+					facingMode: "environment",
+				}
+			}
+
+			navigator.mediaDevices.getUserMedia(cameraSetting)
+				.then((mediaStream) => {
+					video.srcObject = mediaStream;
+				})
+				.catch((err) => {
+					console.log(err.toString());
+				});
+		}
+
+		const shoot = () => {
+			//video要素
+			const video = document.getElementById("camera");
+			//canvas要素
+			const canvas = document.getElementById("DNPcanvas");
+			//canvas要素の大きさを変更
+			canvas.width = cameraWidth;
+			canvas.height = cameraHeight;
+			//描画用オブジェクトを取得
+			const ctx = canvas.getContext("2d");
+
+			//描画する
+			ctx.drawImage(
+				video,
+				0,
+				0,
+				cameraWidth,
+				cameraHeight
+			);
+		}
+  </script>
+</body>
+</html>
