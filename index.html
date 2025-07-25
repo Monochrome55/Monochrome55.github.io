@@ -172,7 +172,28 @@
 			position: absolute;
 			margin-left: 300px;
 			margin-top: 220px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+            
 		}
+        #memoran {
+            font-size: x-large;
+            resize: none;
+            margin-right: auto;
+            height: 200px;
+            width: 465px;
+        }
+        #camera.zoomed {
+            transform: scale(2); /* 2倍拡大 */
+            transform-origin: center;
+            object-fit: cover;
+            object-position: center;
+        }
+        .look {
+            font-style: italic;
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -198,7 +219,7 @@
             <div id="buttons_r2">
                 <label>
                     <input type="checkbox" id="zoomCheckbox" />
-                    ２倍ズーム
+                    ズーム
                 </label>
             </div>
 			<div id="buttons_r3">
@@ -246,7 +267,8 @@
 			</div>
 		</div>
 		<div id="memo">
-			<label>メモ</label>
+			<label for="memoran">メモ</label>
+            <textarea id="memoran" placeholder="メモが書けます"></textarea>
 		</div>
         <div id="qrframe">
             <div id="qrcodeSmall"></div>
@@ -255,6 +277,7 @@
 
 		
     </div>
+    <p><span class="look">IDカードを保存</span>はうまく機能しないので使わないほうがいいです</p>
 
     <script>
         function generateRandomString(length) {
@@ -315,10 +338,26 @@
         const shoot = () => {
             const video = document.getElementById("camera");
             const canvas = document.getElementById("DNPcanvas");
+            const ctx = canvas.getContext("2d");
+
+            const zoom = document.getElementById("zoomCheckbox").checked;
+            const scale = 2; // 拡大倍率（zoom時）
+            
             canvas.width = cameraWidth;
             canvas.height = cameraHeight;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(video, 0, 0, cameraWidth, cameraHeight);
+
+            if (zoom) {
+                // ズーム時は中央部分だけを切り出して描画（例：中心 50% を拡大）
+                const srcX = (video.videoWidth - video.videoWidth / scale) / 2;
+                const srcY = (video.videoHeight - video.videoHeight / scale) / 2;
+                const srcW = video.videoWidth / scale;
+                const srcH = video.videoHeight / scale;
+
+                ctx.drawImage(video, srcX, srcY, srcW, srcH, 0, 0, cameraWidth, cameraHeight);
+            } else {
+                // 通常通り全体を描画
+                ctx.drawImage(video, 0, 0, cameraWidth, cameraHeight);
+            }
         };
 
 		function downloadIDCardImage() {
@@ -335,6 +374,15 @@
 				link.click();
 			});
 		}
+
+        document.getElementById('zoomCheckbox').addEventListener('change', function () {
+            const camera = document.getElementById('camera');
+            if (this.checked) {
+                camera.classList.add('zoomed');
+            } else {
+                camera.classList.remove('zoomed');
+            }
+        });
     </script>
 </body>
 </html>
