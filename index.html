@@ -179,10 +179,12 @@
 		}
         #memoran {
             font-size: x-large;
-            resize: none;
+            resize: horizontal;
             margin-right: auto;
             height: 200px;
             width: 465px;
+	    min-width: 440px;
+            max-width: 480px;
         }
         #camera.zoomed {
             transform: scale(2); /* 2倍拡大 */
@@ -268,7 +270,7 @@
 		</div>
 		<div id="memo">
 			<label for="memoran">メモ</label>
-            <textarea id="memoran" placeholder="メモが書けます"></textarea>
+            <textarea id="memoran" placeholder="メモが書けます（横幅をある程度調節できます）"></textarea>
 		</div>
         <div id="qrframe">
             <div id="qrcodeSmall"></div>
